@@ -135,7 +135,14 @@ create policy "Users can update own profile" on profiles for update using (auth.
 
 -- BRANDS & PRODUCTS (Public read, Admin write)
 create policy "Brands are viewable by everyone" on brands for select using (true);
+create policy "Admins can insert brands" on brands for insert with check ( is_admin() );
+create policy "Admins can update brands" on brands for update using ( is_admin() );
+create policy "Admins can delete brands" on brands for delete using ( is_admin() );
+
 create policy "Products are viewable by everyone" on products for select using (true);
+create policy "Admins can insert products" on products for insert with check ( is_admin() );
+create policy "Admins can update products" on products for update using ( is_admin() );
+create policy "Admins can delete products" on products for delete using ( is_admin() );
 
 -- CLIENTS
 -- Admins see all. Sales Reps see assigned + Not assigned (leads pool)? 
