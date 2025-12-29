@@ -47,7 +47,7 @@ export function MembersTab() {
         phone: '',
         allowedProvinces: [] as string[],
         allowedBrands: [] as string[],
-        role: 'sales_rep' as 'admin' | 'sales_rep',
+        role: 'sales_rep' as 'admin' | 'sales_rep' | 'data_entry',
         // Targets
         monthDealsTarget: 0,
         monthVisitsTarget: 0,
