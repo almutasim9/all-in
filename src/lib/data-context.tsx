@@ -96,6 +96,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
                         googleMapsUrl: c.google_maps_url,
                         notes: c.notes,
                         assignedTo: c.assigned_to,
+                        createdAt: c.created_at,
                         followUpDate: c.follow_up_date,
                         followUpNote: c.follow_up_note,
                         dealValue: c.deal_value,

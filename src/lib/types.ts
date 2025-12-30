@@ -18,6 +18,7 @@ export interface Client {
     phone: string;
     productInterest: string;
     lastInteraction: string;
+    createdAt?: string;
     email: string;
     address: string;
     province?: string; // Governorate
