@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { Sidebar } from './sidebar';
+import { MobileNav } from './mobile-nav';
 
 interface MainLayoutProps {
     children: React.ReactNode;
@@ -49,10 +50,11 @@ export function MainLayout({ children, allowedRoles }: MainLayoutProps) {
         <div className="flex h-screen bg-slate-50">
             <Sidebar />
             <main className="flex-1 overflow-auto">
-                <div className="min-h-full p-6 lg:p-8">
+                <div className="min-h-full p-6 lg:p-8 pb-24 md:pb-8">
                     {children}
                 </div>
             </main>
+            <MobileNav />
         </div>
     );
 }

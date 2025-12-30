@@ -19,8 +19,10 @@ import { useData } from '@/lib/data-context';
 import { AddLeadDialog } from '@/components/clients/add-lead-dialog';
 import { Button } from '@/components/ui/button';
 import { type Client } from '@/lib/types';
-import { Users, Trophy, Calendar, BarChart3, LayoutDashboard, KanbanSquare, Plus } from 'lucide-react';
+import { Users, Trophy, Calendar, BarChart3, LayoutDashboard, KanbanSquare, Plus, Map as MapIcon } from 'lucide-react';
 import { PipelineView } from '@/components/clients/pipeline-view';
+import { QuickActions } from '@/components/dashboard/quick-actions';
+import { ClientMapView } from '@/components/clients/client-map-view';
 
 export default function DashboardPage() {
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
@@ -112,9 +114,21 @@ export default function DashboardPage() {
                 <KanbanSquare className="h-4 w-4" />
                 Pipeline
               </TabsTrigger>
+              <TabsTrigger
+                value="map"
+                className="gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-blue-700 font-medium"
+              >
+                <MapIcon className="h-4 w-4" />
+                Map
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview" className="space-y-4 mt-0 focus-visible:outline-none focus-visible:ring-0">
+              {/* Quick Actions (Mobile First) */}
+              <div className="md:hidden">
+                <QuickActions onAddLead={() => setAddLeadOpen(true)} />
+              </div>
+
               {/* Target Card - Full Width (Slim) */}
               <MyTargetCard />
 
@@ -136,6 +150,10 @@ export default function DashboardPage() {
                   onClientClick={handleClientClick}
                 />
               </div>
+            </TabsContent>
+
+            <TabsContent value="map" className="mt-0 focus-visible:outline-none focus-visible:ring-0">
+              <ClientMapView />
             </TabsContent>
           </Tabs>
         )}
