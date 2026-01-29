@@ -50,7 +50,7 @@ export function MainLayout({ children, allowedRoles }: MainLayoutProps) {
         <div className="flex h-screen bg-slate-50">
             <Sidebar />
             <main className="flex-1 overflow-auto">
-                <div className="min-h-full p-6 lg:p-8 pb-24 md:pb-8">
+                <div className="min-h-full p-6 pt-16 lg:p-8 pb-24 md:pb-8">
                     {children}
                 </div>
             </main>
