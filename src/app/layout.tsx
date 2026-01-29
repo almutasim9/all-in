@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "@/lib/auth-context";
-import { DataProvider } from "@/lib/data-context";
+import "./globals.css";
+import { Providers } from "@/components/providers";
 import { Toaster } from "sonner";
 
 import { ServiceWorkerCleanup } from "@/components/service-worker-cleanup";
@@ -39,13 +39,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body className="font-sans antialiased bg-slate-50">
-        <AuthProvider>
-          <DataProvider>
-            <ServiceWorkerCleanup />
-            {children}
-            <Toaster position="top-right" richColors />
-          </DataProvider>
-        </AuthProvider>
+        <Providers>
+          <ServiceWorkerCleanup />
+          {children}
+          <Toaster position="top-right" richColors />
+        </Providers>
       </body>
     </html>
   );

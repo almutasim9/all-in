@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Download, TrendingUp, TrendingDown, Users, DollarSign, Target, Clock, AlertCircle } from 'lucide-react';
 import { useData } from '@/lib/data-context';
 import { useMemo } from 'react';
+import { RevenueChart } from '@/components/reports/revenue-chart';
+import { StatusPieChart } from '@/components/reports/status-pie-chart';
 
 export default function ReportsPage() {
     const { clients } = useData();
@@ -121,6 +123,12 @@ export default function ReportsPage() {
                         </CardContent>
                     </Card>
                 ))}
+            </div>
+
+            {/* Charts Section */}
+            <div className="grid gap-4 md:grid-cols-7 mb-8">
+                <RevenueChart />
+                <StatusPieChart />
             </div>
 
             {/* Recent Reports Placeholder */}

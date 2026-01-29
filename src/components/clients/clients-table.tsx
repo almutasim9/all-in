@@ -62,8 +62,10 @@ import {
     Map,
     Tag
 } from 'lucide-react';
+import { TableSkeleton } from '@/components/ui/table-skeleton';
 import { useData } from '@/lib/data-context';
 import { useAuth } from '@/lib/auth-context';
+import { useLanguage } from '@/contexts/language-context';
 import { type Client } from '@/lib/types';
 import { ClientSheet } from './client-sheet';
 import { AssignLeadDialog } from './assign-lead-dialog';
@@ -95,8 +97,25 @@ const statusLabels = {
 };
 
 export function ClientsTable() {
-    const { clients, updateClient, getSalesReps, getTeamMemberById, addActivity, addClient, products, brands } = useData();
+    const {
+        clients,
+        updateClient,
+        getSalesReps,
+        getTeamMemberById,
+        addActivity,
+        addClient,
+        products,
+        brands,
+        // Pagination
+        page,
+        totalPages,
+        totalItems,
+        nextPage,
+        prevPage,
+        isLoading
+    } = useData();
     const { user } = useAuth();
+    const { t } = useLanguage();
 
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -372,6 +391,10 @@ export function ClientsTable() {
         return 'bg-emerald-100 text-emerald-700 border-emerald-200';
     };
 
+    if (isLoading) {
+        return <TableSkeleton />;
+    }
+
     return (
         <TooltipProvider>
             <div className="space-y-4">
@@ -570,19 +593,19 @@ export function ClientsTable() {
                                         />
                                     </TableHead>
                                 )}
-                                <TableHead className="font-semibold text-slate-700">Client Name</TableHead>
-                                {visibleColumns.status && <TableHead className="font-semibold text-slate-700">Status</TableHead>}
-                                {visibleColumns.assignedTo && <TableHead className="font-semibold text-slate-700">Assigned To</TableHead>}
-                                {visibleColumns.followUp && <TableHead className="font-semibold text-slate-700">Follow-up</TableHead>}
-                                {visibleColumns.quickActions && <TableHead className="font-semibold text-slate-700">Quick Actions</TableHead>}
-                                {visibleColumns.more && <TableHead className="font-semibold text-slate-700 text-right">More</TableHead>}
+                                <TableHead className="font-semibold text-slate-700">{t('clients.clientName')}</TableHead>
+                                {visibleColumns.status && <TableHead className="font-semibold text-slate-700">{t('clients.status')}</TableHead>}
+                                {visibleColumns.assignedTo && <TableHead className="font-semibold text-slate-700">{t('clients.assignedTo')}</TableHead>}
+                                {visibleColumns.followUp && <TableHead className="font-semibold text-slate-700">{t('clients.followUp')}</TableHead>}
+                                {visibleColumns.quickActions && <TableHead className="font-semibold text-slate-700">{t('clients.quickActions')}</TableHead>}
+                                {visibleColumns.more && <TableHead className="font-semibold text-slate-700 text-right">{t('common.actions')}</TableHead>}
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {filteredClients.length === 0 ? (
                                 <TableRow>
                                     <TableCell colSpan={isAdmin ? 7 : 6} className="h-24 text-center text-slate-500">
-                                        {myClientsOnly ? "No clients assigned to you yet." : "No clients found."}
+                                        {myClientsOnly ? t('clients.noClientsAssigned') : t('clients.noClientsFound')}
                                     </TableCell>
                                 </TableRow>
                             ) : (
@@ -1023,6 +1046,46 @@ export function ClientsTable() {
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
+                {/* Pagination Controls */}
+                <div className="flex items-center justify-between border-t border-slate-200 px-4 py-4 sm:px-6">
+                    <div className="flex flex-1 justify-between sm:hidden">
+                        <Button variant="outline" size="sm" onClick={prevPage} disabled={page <= 1}>
+                            {t('common.previous')}
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={nextPage} disabled={page >= totalPages}>
+                            {t('common.next')}
+                        </Button>
+                    </div>
+                    <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+                        <div>
+                            <p className="text-sm text-slate-700">
+                                {t('common.showing')} <span className="font-medium">{page}</span> {t('common.of')}{' '}
+                                <span className="font-medium">{totalPages}</span>
+                                {' '}({t('common.total')} <span className="font-medium">{totalItems}</span>)
+                            </p>
+                        </div>
+                        <div>
+                            <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                                <Button
+                                    variant="outline"
+                                    className="rounded-l-md"
+                                    onClick={prevPage}
+                                    disabled={page <= 1}
+                                >
+                                    {t('common.previous')}
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    className="rounded-r-md ml-2"
+                                    onClick={nextPage}
+                                    disabled={page >= totalPages}
+                                >
+                                    {t('common.next')}
+                                </Button>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
             </div>
         </TooltipProvider>
     );

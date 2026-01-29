@@ -9,6 +9,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/lib/auth-context';
+import { LanguageSwitcher } from '@/components/language-switcher';
+import { useLanguage } from '@/contexts/language-context';
 import {
     LayoutDashboard,
     Users,
@@ -33,14 +35,7 @@ interface NavItem {
     roles: ('admin' | 'sales_rep' | 'data_entry')[];
 }
 
-const navItems: NavItem[] = [
-    { label: 'Dashboard', href: '/', icon: LayoutDashboard, roles: ['admin', 'sales_rep'] },
-    { label: 'My Pipeline', href: '/pipeline', icon: KanbanSquare, roles: ['sales_rep'] }, // New Entry
-    { label: 'My Clients', href: '/clients', icon: Users, roles: ['admin', 'sales_rep'] },
-    { label: 'Products', href: '/products', icon: Package, roles: ['admin', 'sales_rep'] },
-    { label: 'Team Management', href: '/team', icon: UsersRound, roles: ['admin'] },
-    { label: 'Reports', href: '/reports', icon: BarChart3, roles: ['admin'] },
-];
+
 
 const roleLabels = {
     admin: 'Admin',
@@ -58,8 +53,18 @@ export function Sidebar() {
     const pathname = usePathname();
     const router = useRouter();
     const { user, logout, isLoading } = useAuth();
+    const { t } = useLanguage();
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+    const navItems: NavItem[] = [
+        { label: t('sidebar.dashboard'), href: '/', icon: LayoutDashboard, roles: ['admin', 'sales_rep'] },
+        { label: t('sidebar.pipeline'), href: '/pipeline', icon: KanbanSquare, roles: ['sales_rep'] },
+        { label: t('sidebar.clients'), href: '/clients', icon: Users, roles: ['admin', 'sales_rep'] },
+        { label: t('sidebar.products'), href: '/products', icon: Package, roles: ['admin', 'sales_rep'] },
+        { label: t('sidebar.team'), href: '/team', icon: UsersRound, roles: ['admin'] },
+        { label: t('sidebar.reports'), href: '/reports', icon: BarChart3, roles: ['admin'] },
+    ];
 
     // Redirect to login if not authenticated
     useEffect(() => {
@@ -145,6 +150,11 @@ export function Sidebar() {
                         </div>
                     )}
                 </div>
+                {!isCollapsed && (
+                    <div className="mb-2 px-2">
+                        <LanguageSwitcher />
+                    </div>
+                )}
                 <Button
                     variant="ghost"
                     size="sm"
@@ -194,7 +204,7 @@ export function Sidebar() {
             {/* Desktop Sidebar */}
             <aside
                 className={cn(
-                    'hidden h-screen border-r border-slate-200 bg-white transition-all duration-300 lg:flex lg:flex-col relative',
+                    'hidden h-screen border-r rtl:border-r-0 rtl:border-l border-slate-200 bg-white transition-all duration-300 lg:flex lg:flex-col relative',
                     isCollapsed ? 'w-16' : 'w-64'
                 )}
             >
