@@ -225,7 +225,8 @@ export function PipelineView({ clients, repId, allowedProvinces, onClientClick }
 
     const Column = ({ status, label, color }: { status: Status; label: string; color: string }) => {
         const statusClients = getClientsByStatus(status);
-        const totalValue = statusClients.length; // Placeholder for deal value
+        const totalClients = statusClients.length;
+        const totalValue = statusClients.reduce((sum, c) => sum + (c.dealValue || 0), 0);
 
         return (
             <div
@@ -237,9 +238,12 @@ export function PipelineView({ clients, repId, allowedProvinces, onClientClick }
                 <div className={cn('p-3 border-t-4 bg-white border-b border-b-slate-100', color)}>
                     <div className="flex justify-between items-center">
                         <h3 className="font-semibold text-slate-800 text-sm">{label}</h3>
-                        <span className="bg-slate-100 text-slate-600 text-xs px-2 py-0.5 rounded-full font-medium">
-                            {totalValue}
-                        </span>
+                        <div className="flex flex-col items-end">
+                            <span className="text-slate-900 text-xs font-bold">${totalValue.toLocaleString()}</span>
+                            <span className="bg-slate-100 text-slate-600 text-[10px] px-1.5 py-0.5 rounded-full font-medium">
+                                {totalClients}
+                            </span>
+                        </div>
                     </div>
                 </div>
 

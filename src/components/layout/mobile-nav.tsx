@@ -20,13 +20,14 @@ export function MobileNav() {
             href: '/my-clients', // We might need to handle tab switching if purely client-side
             active: pathname.includes('/my-clients')
         },
-        // Map feature placeholder - normally would route to a map page or tab
+        /* Map feature hidden as per user request
         {
             label: 'Map',
             icon: Map,
-            href: '/map', // Placeholder route
+            href: '/map',
             active: pathname.includes('/map')
         },
+        */
         {
             label: 'Profile',
             icon: UserCircle,

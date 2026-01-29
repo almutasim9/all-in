@@ -50,9 +50,22 @@ export function ClientProvider({ children }: { children: ReactNode }) {
             const end = start + pageSize - 1;
 
             // 1. Clients with Count
-            const { data: clientsData, error: clientsError, count } = await supabase
+            let query = supabase
                 .from('clients')
-                .select('*', { count: 'exact' })
+                .select('*', { count: 'exact' });
+
+            // Apply data isolation for non-admins
+            if (user?.role !== 'admin') {
+                if (user?.allowedProvinces && user.allowedProvinces.length > 0) {
+                    // Filter by allowed provinces
+                    query = query.in('province', user.allowedProvinces);
+                } else if (user?.id) {
+                    // Filter by assignment
+                    query = query.eq('assigned_to', user.id);
+                }
+            }
+
+            const { data: clientsData, error: clientsError, count } = await query
                 .range(start, end)
                 .order('created_at', { ascending: false });
 
@@ -101,7 +114,7 @@ export function ClientProvider({ children }: { children: ReactNode }) {
                     type: a.type,
                     description: a.description,
                     timestamp: a.timestamp,
-                    user: 'System',
+                    user: a.user_id, // Map the user_id from DB
                 } as Activity)));
             }
 
