@@ -27,7 +27,7 @@ export function Leaderboard() {
     const isAdmin = user?.role === 'admin';
     if (!isAdmin) return null;
 
-    const salesReps = getSalesReps();
+    const salesReps = getSalesReps().filter(rep => rep.role === 'sales_rep');
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth() + 1;
     const currentYear = currentDate.getFullYear();
