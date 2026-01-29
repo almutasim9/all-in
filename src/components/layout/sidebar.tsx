@@ -84,92 +84,6 @@ export function Sidebar() {
         router.push('/login');
     };
 
-    const SidebarContent = () => (
-        <div className="flex h-full flex-col">
-            {/* Logo */}
-            <div className="flex h-16 items-center gap-2 px-4">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-md">
-                    <UtensilsCrossed className="h-5 w-5" />
-                </div>
-                {!isCollapsed && (
-                    <div className="flex flex-col">
-                        <span className="text-lg font-bold text-slate-900">Menu Plus</span>
-                        <span className="text-xs text-slate-500">CRM Dashboard</span>
-                    </div>
-                )}
-            </div>
-
-            <Separator className="my-2" />
-
-            {/* Navigation */}
-            <nav className="flex-1 space-y-1 px-2 py-4">
-                {filteredNavItems.map((item) => {
-                    const isActive = pathname === item.href;
-                    return (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            onClick={() => setIsMobileOpen(false)}
-                            className={cn(
-                                'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
-                                isActive
-                                    ? 'bg-blue-600 text-white shadow-md hover:bg-blue-700'
-                                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
-                                isCollapsed && 'justify-center px-2'
-                            )}
-                        >
-                            <item.icon className={cn('h-5 w-5 flex-shrink-0', isActive ? 'text-white' : 'text-slate-500 group-hover:text-slate-900')} />
-                            {!isCollapsed && <span>{item.label}</span>}
-                        </Link>
-                    );
-                })}
-            </nav>
-
-            <Separator className="my-2" />
-
-            {/* User Profile */}
-            <div className="p-3">
-                <div
-                    className={cn(
-                        'flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-slate-100',
-                        isCollapsed && 'justify-center'
-                    )}
-                >
-                    <Avatar className="h-9 w-9 border-2 border-slate-200">
-                        <AvatarImage src={user.avatar} alt={user.name} />
-                        <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white text-sm font-medium">
-                            {user.name.split(' ').map((n) => n[0]).join('')}
-                        </AvatarFallback>
-                    </Avatar>
-                    {!isCollapsed && (
-                        <div className="flex-1 min-w-0">
-                            <p className="truncate text-sm font-medium text-slate-900">{user.name}</p>
-                            <Badge variant="outline" className={cn('text-xs mt-0.5', roleColors[user.role])}>
-                                {roleLabels[user.role]}
-                            </Badge>
-                        </div>
-                    )}
-                </div>
-                {!isCollapsed && (
-                    <div className="mb-2 px-2">
-                        <LanguageSwitcher />
-                    </div>
-                )}
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleLogout}
-                    className={cn(
-                        'mt-2 w-full justify-start gap-2 text-slate-600 hover:bg-red-50 hover:text-red-600',
-                        isCollapsed && 'justify-center px-2'
-                    )}
-                >
-                    <LogOut className="h-4 w-4" />
-                    {!isCollapsed && <span>Logout</span>}
-                </Button>
-            </div>
-        </div>
-    );
 
     return (
         <>
@@ -198,7 +112,14 @@ export function Sidebar() {
                     isMobileOpen ? 'translate-x-0' : '-translate-x-full'
                 )}
             >
-                <SidebarContent />
+                <SidebarContent
+                    isCollapsed={false}
+                    filteredNavItems={filteredNavItems}
+                    pathname={pathname}
+                    setIsMobileOpen={setIsMobileOpen}
+                    user={user}
+                    handleLogout={handleLogout}
+                />
             </aside>
 
             {/* Desktop Sidebar */}
@@ -208,7 +129,14 @@ export function Sidebar() {
                     isCollapsed ? 'w-16' : 'w-64'
                 )}
             >
-                <SidebarContent />
+                <SidebarContent
+                    isCollapsed={isCollapsed}
+                    filteredNavItems={filteredNavItems}
+                    pathname={pathname}
+                    setIsMobileOpen={setIsMobileOpen}
+                    user={user}
+                    handleLogout={handleLogout}
+                />
 
                 {/* Collapse Toggle */}
                 <Button
@@ -228,3 +156,106 @@ export function Sidebar() {
         </>
     );
 }
+
+interface SidebarContentProps {
+    isCollapsed: boolean;
+    filteredNavItems: NavItem[];
+    pathname: string;
+    setIsMobileOpen: (open: boolean) => void;
+    user: any;
+    handleLogout: () => void;
+}
+
+const SidebarContent = ({
+    isCollapsed,
+    filteredNavItems,
+    pathname,
+    setIsMobileOpen,
+    user,
+    handleLogout
+}: SidebarContentProps) => (
+    <div className="flex h-full flex-col">
+        {/* Logo */}
+        <div className="flex h-16 items-center gap-2 px-4">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-md">
+                <UtensilsCrossed className="h-5 w-5" />
+            </div>
+            {!isCollapsed && (
+                <div className="flex flex-col">
+                    <span className="text-lg font-bold text-slate-900">Menu Plus</span>
+                    <span className="text-xs text-slate-500">CRM Dashboard</span>
+                </div>
+            )}
+        </div>
+
+        <Separator className="my-2" />
+
+        {/* Navigation */}
+        <nav className="flex-1 space-y-1 px-2 py-4">
+            {filteredNavItems.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                    <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setIsMobileOpen(false)}
+                        className={cn(
+                            'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
+                            isActive
+                                ? 'bg-blue-600 text-white shadow-md hover:bg-blue-700'
+                                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
+                            isCollapsed && 'justify-center px-2'
+                        )}
+                    >
+                        <item.icon className={cn('h-5 w-5 flex-shrink-0', isActive ? 'text-white' : 'text-slate-500 group-hover:text-slate-900')} />
+                        {!isCollapsed && <span>{item.label}</span>}
+                    </Link>
+                );
+            })}
+        </nav>
+
+        <Separator className="my-2" />
+
+        {/* User Profile */}
+        <div className="p-3">
+            <div
+                className={cn(
+                    'flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-slate-100',
+                    isCollapsed && 'justify-center'
+                )}
+            >
+                <Avatar className="h-9 w-9 border-2 border-slate-200">
+                    <AvatarImage src={user.avatar} alt={user.name} />
+                    <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white text-sm font-medium">
+                        {user.name.split(' ').map((n: string) => n[0]).join('')}
+                    </AvatarFallback>
+                </Avatar>
+                {!isCollapsed && (
+                    <div className="flex-1 min-w-0">
+                        <p className="truncate text-sm font-medium text-slate-900">{user.name}</p>
+                        <Badge variant="outline" className={cn('text-xs mt-0.5', roleColors[user.role as keyof typeof roleColors])}>
+                            {roleLabels[user.role as keyof typeof roleLabels]}
+                        </Badge>
+                    </div>
+                )}
+            </div>
+            {!isCollapsed && (
+                <div className="mb-2 px-2">
+                    <LanguageSwitcher />
+                </div>
+            )}
+            <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleLogout}
+                className={cn(
+                    'mt-2 w-full justify-start gap-2 text-slate-600 hover:bg-red-50 hover:text-red-600',
+                    isCollapsed && 'justify-center px-2'
+                )}
+            >
+                <LogOut className="h-4 w-4" />
+                {!isCollapsed && <span>Logout</span>}
+            </Button>
+        </div>
+    </div>
+);

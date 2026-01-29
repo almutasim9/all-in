@@ -76,7 +76,7 @@ export function MembersTab() {
         };
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!formData.name || !formData.email || (!editingMember && !formData.password)) return;
 
         const memberData = {
@@ -103,20 +103,22 @@ export function MembersTab() {
             );
 
         } else {
-            const newMember = addTeamMember({
+            const newMember = await addTeamMember({
                 ...memberData,
                 password: formData.password,
             });
 
-            // Create initial target for new member
-            const now = new Date();
-            setMonthlyTarget(
-                newMember.id,
-                now.getMonth() + 1,
-                now.getFullYear(),
-                Number(formData.monthDealsTarget),
-                Number(formData.monthVisitsTarget)
-            );
+            if (newMember) {
+                // Create initial target for new member
+                const now = new Date();
+                setMonthlyTarget(
+                    newMember.id,
+                    now.getMonth() + 1,
+                    now.getFullYear(),
+                    Number(formData.monthDealsTarget),
+                    Number(formData.monthVisitsTarget)
+                );
+            }
         }
 
         setShowAddDialog(false);
