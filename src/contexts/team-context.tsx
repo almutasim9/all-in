@@ -131,7 +131,7 @@ export function TeamProvider({ children }: { children: ReactNode }) {
         if (updates.status) dbUpdates.status = updates.status;
         if (updates.allowedProvinces) dbUpdates.allowed_provinces = updates.allowedProvinces;
         if (updates.allowedBrands) dbUpdates.allowed_brands = updates.allowedBrands;
-        // Phone?
+        if (updates.phone) dbUpdates.phone = updates.phone;
 
         if (Object.keys(dbUpdates).length > 0) {
             supabase.from('profiles').update(dbUpdates).eq('id', id).then(({ error }) => {

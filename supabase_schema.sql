@@ -6,6 +6,7 @@ create table public.profiles (
   id uuid references auth.users on delete cascade not null primary key,
   email text,
   name text,
+  phone text,
   role text check (role in ('admin', 'sales_rep', 'data_entry')) default 'sales_rep',
   status text check (status in ('active', 'inactive')) default 'active',
   avatar_url text,
